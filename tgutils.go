@@ -18,8 +18,8 @@ import (
 // Utils is the type used to instantiate this module. Any variable of this type will have access
 // to all the methods with the reciever *Utils
 type Utils struct {
-	spaceBeforeText   bool
-	coloredText       bool
+	SpaceBeforeText   bool
+	ColoredText       bool
 	PlaySoundFunc     func(string)
 	ValidInputSound   string
 	InvalidInputSound string
@@ -94,13 +94,13 @@ func (u *Utils) GetYesOrNo(q string) bool {
 	answerLineText := "->"
 	invalidInputText := "Invalid input!"
 
-	if u.spaceBeforeText {
+	if u.SpaceBeforeText {
 		answerLineText = " " + answerLineText
 		invalidInputText = " " + invalidInputText
 		q = " " + q
 	}
 
-	if u.coloredText {
+	if u.ColoredText {
 		var red = color.New(color.FgRed).SprintFunc()
 		invalidInputText = red(invalidInputText)
 	}
@@ -140,13 +140,13 @@ func (u *Utils) GetNumber(q string) int {
 	answerLineText := "->"
 	invalidInputText := "Please enter a whole number"
 
-	if u.spaceBeforeText {
+	if u.SpaceBeforeText {
 		answerLineText = " " + answerLineText
 		invalidInputText = " " + invalidInputText
 		q = " " + q
 	}
 
-	if u.coloredText {
+	if u.ColoredText {
 		var red = color.New(color.FgRed).SprintFunc()
 		invalidInputText = red(invalidInputText)
 	}
@@ -181,14 +181,14 @@ func (u *Utils) GetString(q string, minLength int) string {
 	invalidWordText := "The word can't have any digit!"
 	invalidLengthText := fmt.Sprintf("The word must contain atleast %d letters!", minLength)
 
-	if u.spaceBeforeText {
+	if u.SpaceBeforeText {
 		answerLineText = " " + answerLineText
 		invalidWordText = " " + invalidWordText
 		invalidLengthText = " " + invalidLengthText
 		q = " " + q
 	}
 
-	if u.coloredText {
+	if u.ColoredText {
 		var red = color.New(color.FgRed).SprintFunc()
 		invalidWordText = red(invalidWordText)
 		invalidLengthText = red(invalidLengthText)

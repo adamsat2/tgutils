@@ -1,5 +1,5 @@
 # Terminal Games Utilities
-A group of commonly used methods across my Golang terminal-based games.
+A group of methods commonly used across my Golang terminal-based games.
 
 The included tools are:
 
