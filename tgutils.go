@@ -27,6 +27,7 @@ type Utils struct {
 
 // textConfig unites all the text messages of a get method into one struct
 type textConfig struct {
+	questionText      string
 	answerLineText    string
 	invalidInputText  string
 	invalidLengthText string
@@ -103,12 +104,13 @@ func (u *Utils) GetYesOrNo(q string) bool {
 	invalidInputMsg := "Invalid input!"
 
 	tc := textConfig{
+		questionText:     u.getMethodHelper(q, false),
 		answerLineText:   u.getMethodHelper(answerLineMsg, false),
 		invalidInputText: u.getMethodHelper(invalidInputMsg, true),
 	}
 
 	for {
-		fmt.Println(q)
+		fmt.Println(tc.questionText)
 		fmt.Print(tc.answerLineText)
 
 		userInput, err := reader.ReadString('\n')
@@ -148,12 +150,13 @@ func (u *Utils) GetNumber(q string) int {
 	invalidInputMsg := "Please enter a whole number"
 
 	tc := textConfig{
+		questionText:     u.getMethodHelper(q, false),
 		answerLineText:   u.getMethodHelper(answerLineMsg, false),
 		invalidInputText: u.getMethodHelper(invalidInputMsg, true),
 	}
 
 	for {
-		fmt.Println(q)
+		fmt.Println(tc.questionText)
 		fmt.Print(tc.answerLineText)
 
 		userInput, err := reader.ReadString('\n')
@@ -188,13 +191,14 @@ func (u *Utils) GetString(q string, minLength int) string {
 	invalidLengthMsg := fmt.Sprintf("The word must contain atleast %d letters!", minLength)
 
 	tc := textConfig{
+		questionText:      u.getMethodHelper(q, false),
 		answerLineText:    u.getMethodHelper(answerLineMsg, false),
 		invalidWordText:   u.getMethodHelper(invalidWordMsg, true),
 		invalidLengthText: u.getMethodHelper(invalidLengthMsg, true),
 	}
 
 	for {
-		fmt.Println(q)
+		fmt.Println(tc.questionText)
 		fmt.Print(tc.answerLineText)
 
 		userInput, err := reader.ReadString('\n')
