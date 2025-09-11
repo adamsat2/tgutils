@@ -25,6 +25,14 @@ type Utils struct {
 	InvalidInputSound string
 }
 
+// textConfig unites all the text messages of a get method into one struct
+type textConfig struct {
+	answerLineText    string
+	invalidInputText  string
+	invalidLengthText string
+	invalidWordText   string
+}
+
 // Get a random non-negative number within the range [min, max)
 func (u *Utils) RangedRandom(min, max int) int {
 	return rand.Intn(max-min) + min
@@ -91,27 +99,26 @@ func (u *Utils) ClearScreen() {
 func (u *Utils) GetYesOrNo(q string) bool {
 	reader := bufio.NewReader(os.Stdin)
 
-	answerLineText := "->"
-	invalidInputText := "Invalid input!"
+	answerLineMsg := "-> "
+	invalidInputMsg := "Invalid input!"
 
-	if u.SpaceBeforeText {
-		answerLineText = " " + answerLineText
-		invalidInputText = " " + invalidInputText
-		q = " " + q
-	}
-
-	if u.ColoredText {
-		var red = color.New(color.FgRed).SprintFunc()
-		invalidInputText = red(invalidInputText)
+	tc := textConfig{
+		answerLineText:   u.getMethodHelper(answerLineMsg),
+		invalidInputText: u.getMethodHelper(invalidInputMsg),
 	}
 
 	for {
 		fmt.Println(q)
-		fmt.Print(answerLineText)
-		userInput, _ := reader.ReadString('\n')
-		userInput = strings.Replace(userInput, "\r\n", "", -1)
-		userInput = strings.Replace(userInput, "\n", "", -1)
+		fmt.Print(tc.answerLineText)
+
+		userInput, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
+		userInput = strings.TrimSpace(userInput)
 		userInput = strings.ToLower(userInput)
+
 		switch userInput {
 		case "y":
 			if u.PlaySoundFunc != nil && u.ValidInputSound != "" {
@@ -124,7 +131,7 @@ func (u *Utils) GetYesOrNo(q string) bool {
 			}
 			return false
 		default:
-			fmt.Println(invalidInputText)
+			fmt.Println(tc.invalidInputText)
 			if u.PlaySoundFunc != nil && u.InvalidInputSound != "" {
 				u.PlaySoundFunc(u.InvalidInputSound)
 			}
@@ -133,33 +140,32 @@ func (u *Utils) GetYesOrNo(q string) bool {
 
 }
 
-// Display string q on the screen and get a non-negative int number
+// Display string q on the screen and get a number of type int
 func (u *Utils) GetNumber(q string) int {
 	reader := bufio.NewReader(os.Stdin)
 
-	answerLineText := "->"
-	invalidInputText := "Please enter a whole number"
+	answerLineMsg := "-> "
+	invalidInputMsg := "Please enter a whole number"
 
-	if u.SpaceBeforeText {
-		answerLineText = " " + answerLineText
-		invalidInputText = " " + invalidInputText
-		q = " " + q
-	}
-
-	if u.ColoredText {
-		var red = color.New(color.FgRed).SprintFunc()
-		invalidInputText = red(invalidInputText)
+	tc := textConfig{
+		answerLineText:   u.getMethodHelper(answerLineMsg),
+		invalidInputText: u.getMethodHelper(invalidInputMsg),
 	}
 
 	for {
 		fmt.Println(q)
-		fmt.Print(answerLineText)
-		userInput, _ := reader.ReadString('\n')
-		userInput = strings.Replace(userInput, "\r\n", "", -1)
-		userInput = strings.Replace(userInput, "\n", "", -1)
+		fmt.Print(tc.answerLineText)
+
+		userInput, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
+		userInput = strings.TrimSpace(userInput)
+
 		num, err := strconv.Atoi(userInput)
-		if err != nil || num < 0 {
-			fmt.Println(invalidInputText)
+		if err != nil {
+			fmt.Println(tc.invalidInputText)
 			if u.PlaySoundFunc != nil && u.InvalidInputSound != "" {
 				u.PlaySoundFunc(u.InvalidInputSound)
 			}
@@ -177,41 +183,39 @@ func (u *Utils) GetNumber(q string) int {
 func (u *Utils) GetString(q string, minLength int) string {
 	reader := bufio.NewReader(os.Stdin)
 
-	answerLineText := "->"
-	invalidWordText := "The word can't have any digit!"
-	invalidLengthText := fmt.Sprintf("The word must contain atleast %d letters!", minLength)
+	answerLineMsg := "-> "
+	invalidWordMsg := "The word can't have any digit!"
+	invalidLengthMsg := fmt.Sprintf("The word must contain atleast %d letters!", minLength)
 
-	if u.SpaceBeforeText {
-		answerLineText = " " + answerLineText
-		invalidWordText = " " + invalidWordText
-		invalidLengthText = " " + invalidLengthText
-		q = " " + q
-	}
-
-	if u.ColoredText {
-		var red = color.New(color.FgRed).SprintFunc()
-		invalidWordText = red(invalidWordText)
-		invalidLengthText = red(invalidLengthText)
+	tc := textConfig{
+		answerLineText:    u.getMethodHelper(answerLineMsg),
+		invalidWordText:   u.getMethodHelper(invalidWordMsg),
+		invalidLengthText: u.getMethodHelper(invalidLengthMsg),
 	}
 
 	for {
 		fmt.Println(q)
-		fmt.Print(answerLineText)
-		userInput, _ := reader.ReadString('\n')
-		userInput = strings.Replace(userInput, "\r\n", "", -1)
-		userInput = strings.Replace(userInput, "\n", "", -1)
+		fmt.Print(tc.answerLineText)
+
+		userInput, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
+		userInput = strings.TrimSpace(userInput)
+
 		if u.HasDigit(userInput) != -1 {
-			fmt.Println(invalidWordText)
-			if u.PlaySoundFunc != nil && u.ValidInputSound != "" {
-				u.PlaySoundFunc(u.ValidInputSound)
+			fmt.Println(tc.invalidWordText)
+			if u.PlaySoundFunc != nil && u.InvalidInputSound != "" {
+				u.PlaySoundFunc(u.InvalidInputSound)
 			}
 			continue
 		}
 
 		if minLength > 0 && len(userInput) < minLength {
-			fmt.Println(invalidLengthText)
-			if u.PlaySoundFunc != nil && u.ValidInputSound != "" {
-				u.PlaySoundFunc(u.ValidInputSound)
+			fmt.Println(tc.invalidLengthText)
+			if u.PlaySoundFunc != nil && u.InvalidInputSound != "" {
+				u.PlaySoundFunc(u.InvalidInputSound)
 			}
 			continue
 		}
@@ -221,4 +225,20 @@ func (u *Utils) GetString(q string, minLength int) string {
 		}
 		return userInput
 	}
+}
+
+// Helper functions for Get methods
+func (u *Utils) getMethodHelper(str string) string {
+	var red = color.New(color.FgRed).SprintFunc()
+	if str == "" {
+		return str
+	}
+
+	if u.SpaceBeforeText && str[0] != ' ' {
+		str = " " + str
+	}
+	if u.ColoredText {
+		str = red(str)
+	}
+	return str
 }
