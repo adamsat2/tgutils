@@ -103,8 +103,8 @@ func (u *Utils) GetYesOrNo(q string) bool {
 	invalidInputMsg := "Invalid input!"
 
 	tc := textConfig{
-		answerLineText:   u.getMethodHelper(answerLineMsg),
-		invalidInputText: u.getMethodHelper(invalidInputMsg),
+		answerLineText:   u.getMethodHelper(answerLineMsg, false),
+		invalidInputText: u.getMethodHelper(invalidInputMsg, true),
 	}
 
 	for {
@@ -148,8 +148,8 @@ func (u *Utils) GetNumber(q string) int {
 	invalidInputMsg := "Please enter a whole number"
 
 	tc := textConfig{
-		answerLineText:   u.getMethodHelper(answerLineMsg),
-		invalidInputText: u.getMethodHelper(invalidInputMsg),
+		answerLineText:   u.getMethodHelper(answerLineMsg, false),
+		invalidInputText: u.getMethodHelper(invalidInputMsg, true),
 	}
 
 	for {
@@ -188,9 +188,9 @@ func (u *Utils) GetString(q string, minLength int) string {
 	invalidLengthMsg := fmt.Sprintf("The word must contain atleast %d letters!", minLength)
 
 	tc := textConfig{
-		answerLineText:    u.getMethodHelper(answerLineMsg),
-		invalidWordText:   u.getMethodHelper(invalidWordMsg),
-		invalidLengthText: u.getMethodHelper(invalidLengthMsg),
+		answerLineText:    u.getMethodHelper(answerLineMsg, false),
+		invalidWordText:   u.getMethodHelper(invalidWordMsg, true),
+		invalidLengthText: u.getMethodHelper(invalidLengthMsg, true),
 	}
 
 	for {
@@ -228,7 +228,7 @@ func (u *Utils) GetString(q string, minLength int) string {
 }
 
 // Helper functions for Get methods
-func (u *Utils) getMethodHelper(str string) string {
+func (u *Utils) getMethodHelper(str string, colorable bool) string {
 	var red = color.New(color.FgRed).SprintFunc()
 	if str == "" {
 		return str
@@ -237,7 +237,7 @@ func (u *Utils) getMethodHelper(str string) string {
 	if u.SpaceBeforeText && str[0] != ' ' {
 		str = " " + str
 	}
-	if u.ColoredText {
+	if u.ColoredText && colorable {
 		str = red(str)
 	}
 	return str
