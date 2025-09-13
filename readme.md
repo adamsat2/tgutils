@@ -8,6 +8,7 @@ The included tools are:
 - [X] Display a slice in a neat way
 - [X] Find if a string contains a digit
 - [X] Clear the terminal screen
+- [X] Dialogue method that builds upon print functions
 - [X] Get a yes or no input
 - [X] Get a number input
 - [X] Get a string input
